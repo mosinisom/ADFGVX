@@ -17,7 +17,7 @@ namespace Backend.Services
       { 'л', 'м', 'н', 'о', 'п', 'р' },
       { 'с', 'т', 'у', 'ф', 'х', 'ц' },
       { 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь' },
-      { 'э', 'ю', 'я', ' ', '.', ',' }
+      { 'э', 'ю', 'я', ' ', ' ', ' ' }
     };
 
     private readonly static string[] russianWords =
@@ -87,7 +87,7 @@ namespace Backend.Services
           }
           else
           {
-            grid[row, col] = ' ';
+            grid[row, col] = 'x';
           }
         }
       }
@@ -180,7 +180,7 @@ namespace Backend.Services
         }
       }
 
-      return new string(decryptedText.ToArray());
+      return new string(decryptedText.Where(c => c != 'x').ToArray());
     }
 
     public string GenerateKey()
