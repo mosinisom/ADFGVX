@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace Backend.Services
 {
-  // шифр ADFGVX с русским алфавитом
   public class CipherService
   {
     Random random = new Random();
@@ -123,10 +122,66 @@ namespace Backend.Services
 
     public string Decrypt(string text, string key)
     {
-        return "Decrypted text";
+      key = key.Replace(" ", "");
+
+      int numRows = (int)Math.Ceiling((double)text.Length / key.Length);
+      char[,] grid = new char[numRows + 1, key.Length];
+
+      var columns = new List<(char letter, int index)>();
+      for (int i = 0; i < key.Length; i++)
+      {
+        columns.Add((key[i], i));
+      }
+
+      columns.Sort((a, b) => a.letter.CompareTo(b.letter));
+
+      int index = 0;
+      foreach (var column in columns)
+      {
+        for (int row = 1; row <= numRows; row++)
+        {
+          if (index < text.Length)
+          {
+            grid[row, column.index] = text[index++];
+          }
+          else
+          {
+            grid[row, column.index] = ' ';
+          }
+        }
+      }
+
+      var result = new List<char>();
+      for (int row = 1; row <= numRows; row++)
+      {
+        for (int col = 0; col < key.Length; col++)
+        {
+          result.Add(grid[row, col]);
+        }
+      }
+
+      var replacedLetters = result;
+      var decryptedText = new List<char>();
+
+      for (int i = 0; i < replacedLetters.Count; i += 2)
+      {
+        if (i + 1 < replacedLetters.Count)
+        {
+          char first = replacedLetters[i];
+          char second = replacedLetters[i + 1];
+
+          int row = Array.IndexOf(letters, second);
+          int col = Array.IndexOf(letters, first);
+
+          if (row >= 0 && col >= 0)
+          {
+            decryptedText.Add(tableADFGVX[row, col]);
+          }
+        }
+      }
+
+      return new string(decryptedText.ToArray());
     }
-
-
 
     public string GenerateKey()
     {
