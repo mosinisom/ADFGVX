@@ -15,7 +15,7 @@ function initializeWebSocket() {
     let response = JSON.parse(event.data);
     if (response.action === "generateKey") {
       document.getElementById("key").value = response.response;
-    }
+    } 
     else {
       document.getElementById("output").textContent = response.response;
     }
